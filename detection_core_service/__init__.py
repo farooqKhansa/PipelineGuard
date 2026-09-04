@@ -1,0 +1,1 @@
+"""Standalone PipelineGuard Detection Core service."""

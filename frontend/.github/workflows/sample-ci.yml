@@ -1,0 +1,47 @@
+# SAMPLE WORKFLOW - deliberately imperfect, for PipelineGuard demonstration.
+#
+# It never runs automatically: workflow_dispatch is the only trigger, and every
+# step is an echo. Delete .github/workflows/sample-*.yml to remove these.
+#
+# Expected PipelineGuard outcome: AUTO-FIXED (mutable action refs, low blast radius)
+name: Sample CI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "lint would run here"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-sample
+      - run: echo "tests would run here"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  build:
+    needs: [lint, test]
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+      - run: echo "build would run here"

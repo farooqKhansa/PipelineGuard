@@ -1,0 +1,1 @@
+"""Detection Core inference service application."""

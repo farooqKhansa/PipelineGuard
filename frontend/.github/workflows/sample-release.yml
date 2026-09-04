@@ -1,0 +1,33 @@
+# SAMPLE WORKFLOW - deliberately ambiguous, for PipelineGuard demonstration.
+#
+# It never runs automatically: workflow_dispatch is the only trigger, and the
+# network call is commented out so nothing leaves this repository.
+#
+# Expected PipelineGuard outcome: REFUSED
+#   The destination lives in an organisation variable the agent cannot read, so
+#   it cannot tell a legitimate release webhook from a data egress path. It
+#   publishes no fix and no risk score, and escalates the question instead.
+name: Sample Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tag:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "would tag release"
+
+  notify:
+    needs: [tag]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify downstream
+        run: |
+          echo curl -X POST "${{ vars.WEBHOOK_URL }}" -d "${{ toJSON(github.event) }}" || true

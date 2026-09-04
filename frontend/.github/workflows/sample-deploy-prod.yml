@@ -1,0 +1,52 @@
+# SAMPLE WORKFLOW - deliberately imperfect, for PipelineGuard demonstration.
+#
+# It never runs automatically: workflow_dispatch is the only trigger, and every
+# step is an echo. No real deployment happens.
+#
+# Expected PipelineGuard outcome: FLAGGED
+#   permissions: write-all on a production-bound pipeline. The agent describes
+#   the remedy and refuses to apply it, because policy forbids autonomous
+#   permission changes on anything that reaches production.
+name: Sample Deploy (production)
+
+on:
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "build image"
+
+  smoke-test:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "smoke test"
+
+  deploy:
+    needs: [build, smoke-test]
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure credentials
+        env:
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+        run: echo "would assume role"
+      - name: Debug environment
+        if: runner.debug == '1'
+        run: env
+      - name: Apply deployment
+        env:
+          PROD_DEPLOY_KEY: ${{ secrets.PROD_DEPLOY_KEY }}
+        run: echo "would deploy"
+
+  notify:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "would notify"

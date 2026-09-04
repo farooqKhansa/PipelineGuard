@@ -1,0 +1,29 @@
+{
+  "risk_score": 0.91,
+  "confidence": 0.97,
+  "remediation_risk": "low",
+  "remediation_unambiguous": true,
+  "reasons": [
+    "The security-tests job was present in the baseline workflow but is missing from the current workflow.",
+    "Removing the security test gate allows the pipeline to continue without running the repository's security test suite.",
+    "The affected change is isolated to restoring one known workflow job and its dependency on the test job.",
+    "The original security test command and job configuration are available in the baseline diff, making the remediation unambiguous."
+  ],
+  "affected_jobs": [
+    "security-tests"
+  ],
+  "graph_path": [
+    "checkout",
+    "test",
+    "security-tests",
+    "deploy"
+  ],
+  "model_breakdown": {
+    "pipeline_score": 0.93,
+    "code_score": 0.88,
+    "combined_score": 0.91
+  },
+  "repo": "demo-org/pipelineguard-fixtures",
+  "workflow_run_id": "demo-run-2026-08-31-0042",
+  "diff": "--- a/.github/workflows/ci.yml\n+++ b/.github/workflows/ci.yml\n@@ -12,13 +12,6 @@ jobs:\n   test:\n     runs-on: ubuntu-latest\n     steps:\n       - uses: actions/checkout@v4\n       - run: ./scripts/test.sh\n-\n-  security-tests:\n-    needs: test\n-    runs-on: ubuntu-latest\n-    steps:\n-      - uses: actions/checkout@v4\n-      - name: Run security tests\n-        run: ./scripts/security-tests.sh\n \n   deploy:\n     needs: test"
+}
