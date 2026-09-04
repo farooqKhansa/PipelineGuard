@@ -6,3 +6,5 @@ torch==2.4.1
 transformers==4.45.2
 safetensors==0.4.5
 pytest==8.3.3
+protobuf==7.36.1
+httpx==0.28.1

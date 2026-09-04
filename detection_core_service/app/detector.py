@@ -80,14 +80,14 @@ class HuggingFaceDetector:
     def _load_components(model_id: str) -> tuple[Any, Any, Any]:
         try:
             import torch
-            from transformers import RobertaForSequenceClassification, RobertaTokenizer
+            from transformers import AutoTokenizer, RobertaForSequenceClassification
         except ImportError as error:
             raise DetectionError(
                 "torch and transformers are required for local inference"
             ) from error
 
         try:
-            tokenizer = RobertaTokenizer.from_pretrained(model_id)
+            tokenizer = AutoTokenizer.from_pretrained(model_id)
             model = RobertaForSequenceClassification.from_pretrained(model_id)
         except Exception as error:
             raise DetectionError(f"Unable to load model '{model_id}'") from error
