@@ -1,0 +1,1 @@
+"""Backend schemas for external service contracts."""

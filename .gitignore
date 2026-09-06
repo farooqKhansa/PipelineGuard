@@ -1,0 +1,46 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / Next.js
+node_modules/
+.next/
+dist/
+build/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# ML / model artifacts
+checkpoints/
+hf_cache/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# Generated audit records
+audit_records/
+
+# OS
+.DS_Store
+
+# Archives
+*.zip
