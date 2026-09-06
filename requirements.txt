@@ -40,3 +40,4 @@ python-dotenv==1.0.1
 PyYAML>=6.0
 sqlalchemy==2.0.35
 uvicorn[standard]==0.30.6
+yamllint
