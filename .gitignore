@@ -44,3 +44,4 @@ audit_records/
 
 # Archives
 *.zip
+.venv-clean-check/
