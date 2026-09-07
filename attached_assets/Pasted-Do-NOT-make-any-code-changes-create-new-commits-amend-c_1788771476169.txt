@@ -1,0 +1,95 @@
+Do NOT make any code changes, create new commits, amend commits, reset, rebase, squash, force push, or rewrite history.
+
+The project is already fully committed locally. The only remaining issue is that the normal GitHub push failed because of authentication:
+
+`Invalid username or token. Password authentication is not supported for Git operations.`
+
+The current state is:
+
+* Local HEAD: `0dfe32f1933e4645cace04a9a22e11b191372f58`
+* origin/main: `4f6ee09fa30945d0a70fac200abaa8767c22a0ff`
+* Local main is 6 commits ahead.
+* Working tree is clean.
+* The six commits already contain the approved project changes and cleanup.
+
+First verify:
+
+```bash
+git status
+git log --oneline origin/main..HEAD
+git remote -v
+```
+
+Then attempt to resolve ONLY the GitHub authentication problem using Replit's normal GitHub authentication/sign-in mechanism.
+
+Do NOT ask me to paste a GitHub password or token into chat or into any project file.
+
+Once authentication is available, push the EXISTING commits normally:
+
+```bash
+git push origin main
+```
+
+Then verify:
+
+```bash
+git status
+git rev-parse HEAD
+git rev-parse origin/main
+git log origin/main..HEAD --oneline
+```
+
+SUCCESS means:
+
+* Push succeeds.
+* Working tree is clean.
+* `HEAD` equals `origin/main`.
+* `git log origin/main..HEAD --oneline` produces no output.
+
+IMPORTANT FALLBACK:
+
+If you cannot authenticate to GitHub or cannot complete the push from this environment, DO NOT make any additional project changes.
+
+Instead, create a COMPLETE ZIP ARCHIVE of the current final PipelineGuard project exactly as it exists in the working tree.
+
+The ZIP must contain the entire project needed for me to push it manually, while excluding only disposable/generated dependency/build directories that should NOT be committed, such as:
+
+* `node_modules/`
+* `.next/`
+* `dist/`
+* Python `__pycache__/`
+* Python `.venv/`
+* other clearly generated dependency/build/cache directories
+
+DO NOT exclude source code, configuration, Git history, or important project files.
+
+VERY IMPORTANT:
+
+* Include the `.git/` directory if it is present so the six local commits and Git history are preserved.
+* Do not delete `.git/`.
+* Do not initialize a new repository.
+* Do not alter the existing Git history.
+* Do not create a new commit just for the ZIP.
+* Do not modify application code.
+
+Before creating the ZIP, verify that the project is still clean:
+
+```bash
+git status
+```
+
+Then create the ZIP from the project root, preserving hidden files and the `.git` directory.
+
+After creating it, verify that the ZIP exists and report its exact path and size.
+
+If the environment cannot produce a ZIP containing `.git/`, tell me that explicitly and still create the best complete project ZIP possible, without modifying the repository.
+
+Your final response must clearly report ONE of these outcomes:
+
+A) `GitHub push succeeded` — and provide the final HEAD/origin synchronization result.
+
+OR
+
+B) `GitHub push could not be completed` — and provide the exact path to the complete ZIP that I can take and push manually.
+
+Do not continue working on the application after either outcome.
