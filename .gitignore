@@ -1,49 +1,47 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Environment / secrets
+.env
+.env.*
+!.env.example
 
-# compiled output
-dist
-tmp
-out-tsc
-*.tsbuildinfo
-.expo
-.expo-shared
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
 
-# dependencies
-node_modules
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# Node / Next.js
+node_modules/
+.next/
+dist/
+build/
 
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
+# ML / model artifacts
+checkpoints/
+hf_cache/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
 
-# System Files
+# Generated audit records
+audit_records/
+
+# OS
 .DS_Store
-Thumbs.db
 
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
-
-# Replit
-.cache/
-.local/
+# Archives
+*.zip
+.venv-clean-check/
