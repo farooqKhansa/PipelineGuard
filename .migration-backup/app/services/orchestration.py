@@ -21,6 +21,7 @@ from app.models.core import (
     AuditEntry,
     Fix,
     Investigation,
+    Organization,
     Pipeline,
     PipelineRun,
     Repository,
@@ -58,12 +59,16 @@ def _trace(db: Session, run_id: str, stage: str, status: str, duration_ms: int, 
 def _get_or_create_repo_pipeline(db: Session, repo_full_name: str, workflow_path: str) -> tuple[Repository, Pipeline]:
     repo = db.query(Repository).filter(Repository.full_name == repo_full_name).one_or_none()
     if not repo:
-        org = None
-        from app.models.core import Organization
-
         org = db.query(Organization).first()
+        if org is None:
+            org = Organization(
+                name="PipelineGuard Demo Org",
+                slug="pipelineguard-demo",
+            )
+            db.add(org)
+            db.flush()
         repo = Repository(
-            organization_id=org.id if org else None,
+            organization_id=org.id,
             name=repo_full_name.split("/")[-1],
             full_name=repo_full_name,
             provider="github",
