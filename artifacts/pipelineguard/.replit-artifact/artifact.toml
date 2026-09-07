@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "PipelineGuard"
+description = "An AI-powered CI/CD risk assistant that inspects pipeline runs, explains findings, and guides safe fixes for engineering teams."
+version = "1.0.0"
+id = "artifacts/pipelineguard"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23195
+
+[services.development]
+run = "pnpm --filter @workspace/pipelineguard run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/pipelineguard", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/pipelineguard/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23195"
+BASE_PATH = "/"

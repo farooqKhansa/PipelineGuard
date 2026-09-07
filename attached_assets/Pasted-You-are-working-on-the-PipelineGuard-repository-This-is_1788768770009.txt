@@ -1,0 +1,305 @@
+You are working on the PipelineGuard repository. This is the FINAL pre-submission stabilization pass. Do NOT redesign the application, change the architecture, or remove existing functionality.
+
+Current verified state:
+
+* Fresh clone works.
+* Backend test suite currently passes 101/101.
+* `app/models/` is tracked.
+* `yamllint` is already in `requirements.txt`.
+* Bug 1 exists: fresh database + `POST /api/v1/demo/scenario/1` returns 500 because `Repository.organization_id` is NOT NULL and no Organization exists.
+* Bug 2 exists: after seeding, all three live demo scenarios currently return `ESCALATE_TO_HUMAN` / `refused`, instead of demonstrating the intended three agentic decisions:
+
+  1. Scenario 1 → AUTO_FIX
+  2. Scenario 2 → PROPOSE_WITH_CAUTION
+  3. Scenario 3 → ESCALATE_TO_HUMAN
+* The frontend Replay mode already has independent fixture data and must NOT be broken.
+* Frontend build has not yet been successfully verified.
+
+IMPORTANT:
+Preserve the existing architecture and existing tests. Make the smallest production-quality changes necessary.
+
+==================================================
+PHASE 1 — INSPECT BEFORE MODIFYING
+==================================
+
+Inspect these files and the surrounding decision flow before editing:
+
+* `app/services/orchestration.py`
+* `app/services/detection_service.py`
+* `app/demo.py`
+* the agentic decision/remediation logic
+* `app/seed.py`
+* database models/schema/migrations
+* `DEMO.md`
+* `README.md`
+* `.env.example`
+* frontend demo/replay scenario files
+* all existing tests related to demo scenarios and agentic boundaries
+
+Determine exactly where:
+
+* Organization is normally created
+* Repository creation is performed
+* Detection assessment fields are represented
+* `remediation_risk` is represented
+* `remediation_unambiguous` is represented
+* the final decision (`AUTO_FIX`, `PROPOSE_WITH_CAUTION`, `ESCALATE_TO_HUMAN`) is calculated
+
+Do not guess. Follow the existing code's canonical types/enums/models.
+
+==================================================
+PHASE 2 — FIX BUG 1: FRESH DATABASE
+===================================
+
+Current failure:
+
+`POST /api/v1/demo/scenario/1`
+→ 500
+→ `IntegrityError: NOT NULL constraint failed: repositories.organization_id`
+
+Root cause:
+`_get_or_create_repo_pipeline()` can attempt to create a Repository with `organization_id=None` when the database has no Organization.
+
+Fix this properly so a fresh clone works without requiring the user to manually run:
+
+`python -m app.seed`
+
+Preferred solution:
+
+* Make the demo/orchestration path safely obtain/create the required default Organization before creating the Repository.
+* Reuse existing seed/default organization logic if appropriate.
+* Do not weaken the database constraint.
+* Do not insert invalid NULL organization IDs.
+* Avoid creating duplicate Organizations on repeated demo calls.
+* Keep the solution idempotent.
+
+The goal is:
+
+fresh clone
+→ install
+→ migrate/start app
+→ POST `/api/v1/demo/scenario/1`
+→ succeeds
+
+A manual seed command may remain available, but it must NOT be a hidden prerequisite for the demo endpoint.
+
+If the project's intended architecture instead requires startup seeding, implement that cleanly and idempotently. Choose the least invasive approach consistent with the existing project.
+
+==================================================
+PHASE 3 — FIX BUG 2: LIVE DEMO DECISIONS
+========================================
+
+This is the highest priority.
+
+The three live demo scenarios must genuinely exercise the agentic decision boundary.
+
+Required behavior:
+
+Scenario 1:
+
+* Intended decision: `AUTO_FIX`
+* High confidence
+* Low remediation risk
+* Unambiguous remediation
+* Must produce the project's canonical AUTO_FIX/refusal/decision representation.
+
+Scenario 2:
+
+* Intended decision: `PROPOSE_WITH_CAUTION`
+* High confidence
+* High-impact/high remediation risk
+* Explicitly potentially intentional
+* Must produce the canonical caution/propose decision.
+
+Scenario 3:
+
+* Intended decision: `ESCALATE_TO_HUMAN`
+* Low confidence and/or ambiguous remediation
+* Must explicitly demonstrate that the agent refuses to make an automatic decision.
+
+IMPORTANT:
+Do NOT simply hardcode the final decision returned by the API.
+
+The scenarios must pass through the actual production agentic decision logic.
+
+Find the canonical fields/enums/types used by the decision layer and construct the demo detection assessments so that the existing decision engine naturally reaches the three intended branches.
+
+The existing comment says the demo inputs are "Legacy demo input: missing canonical fields, so it escalates."
+
+Replace the legacy/incomplete scenario inputs with valid canonical assessment data.
+
+The demonstration should therefore be:
+
+Scenario 1 input
+→ detection assessment
+→ agentic decision engine
+→ AUTO_FIX
+
+Scenario 2 input
+→ detection assessment
+→ agentic decision engine
+→ PROPOSE_WITH_CAUTION
+
+Scenario 3 input
+→ detection assessment
+→ agentic decision engine
+→ ESCALATE_TO_HUMAN
+
+Do not duplicate the decision logic inside demo.py.
+
+Do not bypass the agentic layer.
+
+Do not alter the decision thresholds merely to make the demo pass.
+
+==================================================
+PHASE 4 — ADD/UPDATE TESTS
+==========================
+
+Add regression coverage for Bug 1.
+
+There must be a test proving that the demo scenario endpoint works against an empty/fresh database without manually calling the seed command first.
+
+Add or update tests proving:
+
+Scenario 1 → AUTO_FIX
+Scenario 2 → PROPOSE_WITH_CAUTION
+Scenario 3 → ESCALATE_TO_HUMAN
+
+Also verify the response contains the expected supporting explanation/evidence where the current API contract provides it.
+
+Do not delete or weaken existing tests.
+
+Run the complete backend test suite.
+
+Expected result:
+101+ tests passing, 0 failures.
+
+If the number of tests changes because new regression tests are added, report the new exact count.
+
+==================================================
+PHASE 5 — DOCUMENTATION
+=======================
+
+Update documentation so a completely new developer/judge can run PipelineGuard without hidden steps.
+
+At minimum review:
+
+* README.md
+* DEMO.md
+* .env.example
+
+Document the actual recommended setup.
+
+If manual database seeding is no longer required for the demo, remove the misleading prerequisite.
+
+Keep documentation concise and accurate.
+
+==================================================
+PHASE 6 — FRONTEND VERIFICATION
+===============================
+
+Inspect frontend package configuration.
+
+Run from `frontend/`:
+
+`npm install`
+
+then:
+
+`npm run build`
+
+If npm throws the known "Exit handler never called!" environment/npm error again, do not modify application code just to work around an unrelated npm bug.
+
+Instead:
+
+* retry once using the safest reasonable npm cache/install approach;
+* determine whether the failure is environmental or application-related;
+* if it is genuinely an application build error, fix it;
+* if it is only npm infrastructure/environment failure, clearly report that separately.
+
+Do NOT replace dependencies or upgrade major versions unnecessarily.
+
+Verify TypeScript/build correctness if the project provides the appropriate script.
+
+==================================================
+PHASE 7 — FINAL INTEGRATION TEST
+================================
+
+After all changes:
+
+1. Start from a clean database.
+2. Apply migrations.
+3. Do NOT manually run `python -m app.seed`.
+4. Start the backend.
+5. Call:
+
+POST `/api/v1/demo/scenario/1`
+POST `/api/v1/demo/scenario/2`
+POST `/api/v1/demo/scenario/3`
+
+Record the actual returned decisions.
+
+They MUST be:
+
+1 → AUTO_FIX
+2 → PROPOSE_WITH_CAUTION
+3 → ESCALATE_TO_HUMAN
+
+Then verify:
+
+`GET /health`
+
+Then run the complete backend test suite.
+
+Then verify the frontend build.
+
+==================================================
+PHASE 8 — GIT SAFETY
+====================
+
+Before committing:
+
+`git status`
+
+Review every changed file.
+
+Do NOT commit:
+
+* `.env`
+* credentials
+* API keys
+* secrets
+* node_modules
+* `.next`
+* Python virtual environments
+* generated caches
+* database files unless the repository intentionally tracks one
+* unrelated personal/system files
+
+Show the final diff summary.
+
+Do NOT reset or delete unrelated existing work.
+
+==================================================
+FINAL REPORT
+============
+
+At the end, report:
+
+1. Files changed
+2. Bug 1 fix
+3. Bug 2 fix
+4. Exact demo results:
+
+   * Scenario 1 = ?
+   * Scenario 2 = ?
+   * Scenario 3 = ?
+5. Backend test count and result
+6. Frontend build result
+7. Whether documentation was updated
+8. `git status`
+9. Any remaining issue that could block submission
+
+Most important:
+DO NOT claim success unless you actually execute the tests and the three live demo endpoints.
+Do not stop after editing code. Validate the entire project end-to-end.

@@ -1,0 +1,400 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Semantic colour tokens - Figma collection "1. Color modes".
+   :root holds the Light mode column, .dark holds the Dark mode column.
+   Every value below is copied verbatim from the Untitled UI Pro library.
+   --------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  /* Background */
+  --bg-primary: #ffffff;
+  --bg-primary-alt: #ffffff;
+  --bg-primary-hover: #fafafa;
+  --bg-primary-solid: #0a0d12;
+  --bg-secondary: #fafafa;
+  --bg-secondary-alt: #fafafa;
+  --bg-secondary-hover: #f5f5f5;
+  --bg-secondary-subtle: #fdfdfd;
+  --bg-secondary-solid: #535862;
+  --bg-tertiary: #f5f5f5;
+  --bg-quaternary: #e9eaeb;
+  --bg-active: #fafafa;
+  --bg-disabled: #f5f5f5;
+  --bg-overlay: #0a0d12;
+  --bg-brand-primary: #f9f5ff;
+  --bg-brand-primary-alt: #f9f5ff;
+  --bg-brand-secondary: #f4ebff;
+  --bg-brand-solid: #7f56d9;
+  --bg-brand-solid-hover: #6941c6;
+  --bg-error-primary: #fef3f2;
+  --bg-error-secondary: #fee4e2;
+  --bg-error-solid: #d92d20;
+  --bg-warning-primary: #fffaeb;
+  --bg-warning-secondary: #fef0c7;
+  --bg-warning-solid: #dc6803;
+  --bg-success-primary: #ecfdf3;
+  --bg-success-secondary: #dcfae6;
+  --bg-success-solid: #079455;
+
+  /* Text */
+  --text-primary: #181d27;
+  --text-primary-on-brand: #ffffff;
+  --text-secondary: #414651;
+  --text-secondary-hover: #252b37;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --text-white: #ffffff;
+  --text-disabled: #717680;
+  --text-placeholder: #717680;
+  --text-brand-primary: #42307d;
+  --text-brand-secondary: #6941c6;
+  --text-brand-tertiary: #7f56d9;
+  --text-error-primary: #d92d20;
+  --text-warning-primary: #dc6803;
+  --text-success-primary: #079455;
+
+  /* Border */
+  --border-primary: #d5d7da;
+  --border-secondary: #e9eaeb;
+  --border-tertiary: #f5f5f5;
+  --border-disabled: #d5d7da;
+  --border-brand: #9e77ed;
+  --border-error: #f04438;
+  --border-error-subtle: #fda29b;
+
+  /* Foreground (icons) */
+  --fg-primary: #181d27;
+  --fg-secondary: #414651;
+  --fg-tertiary: #535862;
+  --fg-quaternary: #a4a7ae;
+  --fg-white: #ffffff;
+  --fg-disabled: #a4a7ae;
+  --fg-brand-primary: #7f56d9;
+  --fg-brand-secondary: #9e77ed;
+  --fg-error-primary: #d92d20;
+  --fg-error-secondary: #f04438;
+  --fg-warning-primary: #dc6803;
+  --fg-warning-secondary: #f79009;
+  --fg-success-primary: #079455;
+  --fg-success-secondary: #17b26a;
+
+  /* Effects */
+  --focus-ring: #9e77ed;
+  --shadow-xs: 0 1px 2px 0 #0a0d120d;
+  --shadow-sm: 0 1px 3px 0 #0a0d121a, 0 1px 2px -1px #0a0d121a;
+  --shadow-md: 0 4px 8px -2px #0a0d121a, 0 2px 4px -2px #0a0d120f;
+  --shadow-lg: 0 12px 16px -4px #0a0d1214, 0 4px 6px -2px #0a0d1208;
+  --shadow-xl: 0 20px 24px -4px #0a0d1214, 0 8px 8px -4px #0a0d1208;
+
+  /* Product extension - agent decision axis (see lib/design/tokens.ts) */
+  --decision-autofix: #079455;
+  --decision-autofix-bg: #ecfdf3;
+  --decision-flag: #dc6803;
+  --decision-flag-bg: #fffaeb;
+  --decision-refuse: #535862;
+  --decision-refuse-bg: #fafafa;
+
+  /* Product extension - severity axis */
+  --sev-critical: #b42318;
+  --sev-high: #d92d20;
+  --sev-medium: #dc6803;
+  --sev-low: #535862;
+
+  /* Risk bands. Deliberately NOT emergency red at the top: this tool reports a
+     measurement, it is not a fire alarm. The scale runs green - amber - orange
+     - deep clay, which stays legible without triggering alarm fatigue. */
+  --risk-elevated: #ef6820;
+  --risk-severe: #b93815;
+
+  /* Syntax tokens for the diff viewer, drawn from the library ramps so code
+     colour belongs to the same system as everything else. */
+  --syn-key: #6941c6;
+  --syn-string: #067647;
+  --syn-number: #e04f16;
+  --syn-comment: #717680;
+  --syn-expr: #0e7090;
+  --syn-literal: #444ce7;
+
+  /* Charts */
+  --grid-line: #e9eaeb;
+  --axis-ink: #717680;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Background */
+  --bg-primary: #0c0e12;
+  --bg-primary-alt: #13161b;
+  --bg-primary-hover: #22262f;
+  --bg-primary-solid: #13161b;
+  --bg-secondary: #13161b;
+  --bg-secondary-alt: #0c0e12;
+  --bg-secondary-hover: #22262f;
+  --bg-secondary-subtle: #13161b;
+  --bg-secondary-solid: #61656c;
+  --bg-tertiary: #22262f;
+  --bg-quaternary: #373a41;
+  --bg-active: #22262f;
+  --bg-disabled: #22262f;
+  --bg-overlay: #22262f;
+  --bg-brand-primary: #9e77ed;
+  --bg-brand-primary-alt: #13161b;
+  --bg-brand-secondary: #7f56d9;
+  --bg-brand-solid: #7f56d9;
+  --bg-brand-solid-hover: #9e77ed;
+  --bg-error-primary: #55160c;
+  --bg-error-secondary: #d92d20;
+  --bg-error-solid: #d92d20;
+  --bg-warning-primary: #4e1d09;
+  --bg-warning-secondary: #dc6803;
+  --bg-warning-solid: #dc6803;
+  --bg-success-primary: #053321;
+  --bg-success-secondary: #079455;
+  --bg-success-solid: #079455;
+
+  /* Text */
+  --text-primary: #f7f7f7;
+  --text-primary-on-brand: #f7f7f7;
+  --text-secondary: #cecfd2;
+  --text-secondary-hover: #ececed;
+  --text-tertiary: #94979c;
+  --text-quaternary: #94979c;
+  --text-white: #ffffff;
+  --text-disabled: #85888e;
+  --text-placeholder: #85888e;
+  --text-brand-primary: #f7f7f7;
+  --text-brand-secondary: #cecfd2;
+  --text-brand-tertiary: #94979c;
+  --text-error-primary: #f97066;
+  --text-warning-primary: #fdb022;
+  --text-success-primary: #47cd89;
+
+  /* Border */
+  --border-primary: #373a41;
+  --border-secondary: #22262f;
+  --border-tertiary: #22262f;
+  --border-disabled: #373a41;
+  --border-brand: #b692f6;
+  --border-error: #f97066;
+  --border-error-subtle: #f04438;
+
+  /* Foreground (icons) */
+  --fg-primary: #ffffff;
+  --fg-secondary: #cecfd2;
+  --fg-tertiary: #94979c;
+  --fg-quaternary: #61656c;
+  --fg-white: #ffffff;
+  --fg-disabled: #85888e;
+  --fg-brand-primary: #9e77ed;
+  --fg-brand-secondary: #9e77ed;
+  --fg-error-primary: #f04438;
+  --fg-error-secondary: #f97066;
+  --fg-warning-primary: #f79009;
+  --fg-warning-secondary: #fdb022;
+  --fg-success-primary: #17b26a;
+  --fg-success-secondary: #47cd89;
+
+  /* Effects - the library zeroes shadow colour in dark mode and relies on
+     borders for elevation. We keep a faint black shadow for large surfaces
+     only, which reads correctly on a #0c0e12 ground. */
+  --focus-ring: #9e77ed;
+  --shadow-xs: 0 1px 2px 0 #00000040;
+  --shadow-sm: 0 1px 3px 0 #00000059, 0 1px 2px -1px #00000059;
+  --shadow-md: 0 4px 8px -2px #00000066, 0 2px 4px -2px #0000004d;
+  --shadow-lg: 0 12px 16px -4px #00000073, 0 4px 6px -2px #0000004d;
+  --shadow-xl: 0 20px 24px -4px #0000008c, 0 8px 8px -4px #00000059;
+
+  /* Product extension - agent decision axis */
+  --decision-autofix: #47cd89;
+  --decision-autofix-bg: #053321;
+  --decision-flag: #fdb022;
+  --decision-flag-bg: #4e1d09;
+  --decision-refuse: #94979c;
+  --decision-refuse-bg: #22262f;
+
+  /* Product extension - severity axis */
+  --sev-critical: #f97066;
+  --sev-high: #f04438;
+  --sev-medium: #fdb022;
+  --sev-low: #94979c;
+
+  /* Risk bands - see the light-mode note above. */
+  --risk-elevated: #f38744;
+  --risk-severe: #ef6820;
+
+  /* Syntax tokens - lifted a few steps for legibility on a #0c0e12 ground. */
+  --syn-key: #d6bbfb;
+  --syn-string: #75e0a7;
+  --syn-number: #f7b27a;
+  --syn-comment: #85888e;
+  --syn-expr: #67e3f9;
+  --syn-literal: #a4bcfd;
+
+  /* Charts */
+  --grid-line: #22262f;
+  --axis-ink: #94979c;
+}
+
+@layer base {
+  * {
+    border-color: var(--border-secondary);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+  /* Tabular figures everywhere numbers are compared vertically. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background-color: var(--bg-brand-secondary);
+    color: var(--text-primary-on-brand);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Thin, precise scrollbars - a dense tool should not spend 15px on chrome. */
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-primary) transparent;
+  }
+  .scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+  .scroll-thin::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+/* The reasoning chain connector rail. Drawn with a gradient so it fades out
+   after the last step instead of butting into the container edge. */
+.reasoning-rail::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 28px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    var(--border-primary) 0%,
+    var(--border-primary) 92%,
+    transparent 100%
+  );
+}
+
+@keyframes pg-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--fg-brand-primary) 45%, transparent); }
+  70%  { box-shadow: 0 0 0 6px color-mix(in srgb, var(--fg-brand-primary) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--fg-brand-primary) 0%, transparent); }
+}
+.pulse-ring { animation: pg-pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+@keyframes pg-fade-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: pg-fade-up 320ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes pg-sweep {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+.sweep { position: relative; overflow: hidden; }
+.sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--fg-brand-primary) 14%, transparent), transparent);
+  animation: pg-sweep 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring, .fade-up, .sweep::after { animation: none !important; }
+}
+
+/* --------------------------------------------------------------------------
+   Live-run motion.
+   Every stage of an analysis gets its own treatment, so a judge never sees a
+   default spinner or a frame that looks broken mid-transition.
+   -------------------------------------------------------------------------- */
+
+@keyframes pg-dash-flow {
+  to { stroke-dashoffset: -24; }
+}
+/* Edges on the dependency graph animate along their path while a run is being
+   analysed, so propagation reads as something happening rather than a picture. */
+.edge-flow {
+  stroke-dasharray: 6 6;
+  animation: pg-dash-flow 900ms linear infinite;
+}
+
+@keyframes pg-node-arrive {
+  from { opacity: 0; transform: scale(0.86); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.node-arrive { animation: pg-node-arrive 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes pg-caret {
+  0%, 45%  { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100%     { opacity: 1; }
+}
+/* The block caret shown while reasoning text is still being written. */
+.caret::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.13em;
+  background: var(--fg-brand-primary);
+  animation: pg-caret 1s steps(1) infinite;
+}
+
+@keyframes pg-stage-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stage-in { animation: pg-stage-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes pg-scan {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(1000%); opacity: 0; }
+}
+/* A scan line that travels down the workflow while the detector is reading it. */
+.scanline::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--fg-brand-primary), transparent);
+  animation: pg-scan 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edge-flow, .node-arrive, .caret::after, .stage-in, .scanline::before {
+    animation: none !important;
+  }
+}
