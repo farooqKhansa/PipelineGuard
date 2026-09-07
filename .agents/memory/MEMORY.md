@@ -1,0 +1,1 @@
+- [Verification environment](verification-environment.md) — Python 3.13 needs compatible current test packages; the migrated Vite build requires artifact PORT and BASE_PATH values.
